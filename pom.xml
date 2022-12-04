@@ -1,0 +1,88 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+    <packaging>pom</packaging>
+
+    <modules>
+        <module>antwhale-edu-dowork-service</module>
+        <module>antwhale-edu-dowork-common</module>
+        <module>antwhale-edu-dowork-code</module>
+        <module>antwhale-edu-dowork-api</module>
+    </modules>
+
+    <parent>
+        <groupId>org.springframework.boot</groupId>
+        <artifactId>spring-boot-starter-parent</artifactId>
+        <version>2.3.12.RELEASE</version>
+        <relativePath/> <!-- lookup parent from repository -->
+    </parent>
+
+    <groupId>org.antwhale</groupId>
+    <artifactId>antwhale-edu-dowork</artifactId>
+    <version>${revision}</version>
+    <name>antwhale-edu-dowork</name>
+    <description>鲸教育后台</description>
+
+    <properties>
+        <revision>1.0.0-snapshot</revision>
+        <skipTests>true</skipTests>
+        <java.version>1.8</java.version>
+        <cloud.version>Hoxton.SR12</cloud.version>
+        <alibaba.version>2.2.9.RELEASE</alibaba.version>
+        <mybatis-plus.version>3.5.2</mybatis-plus.version>
+        <mysql.version>5.1.46</mysql.version>
+        <swagger.version>2.9.2</swagger.version>
+        <jwt.version>0.7.0</jwt.version>
+        <fastjson.version>1.2.29</fastjson.version>
+        <httpclient.version>4.5.1</httpclient.version>
+        <easyexcel.version>3.1.1</easyexcel.version>
+        <aliyun.version>4.5.14</aliyun.version>
+        <jodatime.version>2.10.1</jodatime.version>
+        <xxl-job.version>2.3.0</xxl-job.version>
+        <aliyun.oss.version>3.15.2</aliyun.oss.version>
+    </properties>
+
+    <!--配置dependencyManagement锁定依赖的版本-->
+    <dependencyManagement>
+        <dependencies>
+            <dependency>
+                <groupId>org.springframework.cloud</groupId>
+                <artifactId>spring-cloud-dependencies</artifactId>
+                <version>${cloud.version}</version>
+                <type>pom</type>
+                <scope>import</scope>
+            </dependency>
+
+            <dependency>
+                <groupId>com.alibaba.cloud</groupId>
+                <artifactId>spring-cloud-alibaba-dependencies</artifactId>
+                <version>${alibaba.version}</version>
+                <type>pom</type>
+                <scope>import</scope>
+            </dependency>
+
+            <dependency>
+                <groupId>com.alibaba</groupId>
+                <artifactId>easyexcel</artifactId>
+                <version>${easyexcel.version}</version>
+            </dependency>
+
+            <!--日期时间工具-->
+            <dependency>
+                <groupId>joda-time</groupId>
+                <artifactId>joda-time</artifactId>
+                <version>${jodatime.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>com.aliyun.oss</groupId>
+                <artifactId>aliyun-sdk-oss</artifactId>
+                <version>${aliyun.oss.version}</version>
+            </dependency>
+
+        </dependencies>
+    </dependencyManagement>
+
+</project>
