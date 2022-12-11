@@ -1,6 +1,7 @@
 package org.antwhale.bpo;
 
 import org.antwhale.dto.course.EduSubjectResultDTO;
+import org.antwhale.entity.EduCourse;
 import org.antwhale.entity.EduSubject;
 
 import java.util.List;
@@ -30,5 +31,12 @@ public interface CourseBPO {
      *@Date 23:23 2022/12/6
      *@Description 删除课程类别
      **/
-    void deleteCourseType(EduSubject eduSubject);
+    void deleteSubject(EduSubject eduSubject);
+
+    /**
+     *@author 何欢
+     *@Date 4:25 2022/12/11
+     *@Description 保存课程信息
+     **/
+    EduCourse saveCourse(EduCourse eduCourse);
 }

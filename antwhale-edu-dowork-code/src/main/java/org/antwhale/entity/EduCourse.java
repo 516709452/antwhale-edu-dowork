@@ -6,6 +6,7 @@ import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.experimental.Accessors;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.io.Serializable;
 import java.math.BigDecimal;
@@ -79,5 +80,8 @@ public class EduCourse implements Serializable {
     @ApiModelProperty(value = "数据修改时间")
     private String updatetime;
 
+    @TableField(exist = false)
+    @ApiModelProperty(value = "课程封面文件")
+    private MultipartFile imageFile;
 
 }

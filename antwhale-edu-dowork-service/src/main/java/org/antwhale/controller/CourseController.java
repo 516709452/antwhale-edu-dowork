@@ -1,14 +1,17 @@
 package org.antwhale.controller;
 
 import lombok.extern.slf4j.Slf4j;
+import org.antwhale.blo.EduCourseBLO;
 import org.antwhale.bpo.CourseBPO;
 import org.antwhale.dto.course.EduSubjectResultDTO;
+import org.antwhale.entity.EduCourse;
 import org.antwhale.entity.EduSubject;
 import org.antwhale.vo.ResultVo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
 
@@ -50,8 +53,19 @@ public class CourseController {
     *@Date 23:23 2022/12/6
     *@Description 删除课程类别
     **/
-    @PostMapping("/course/deleteCourseType")
-    public void deleteCourseType(@RequestBody EduSubject eduSubject) {
-        courseBPO.deleteCourseType(eduSubject);
+    @PostMapping("/course/deleteSubject")
+    public void deleteSubject(@RequestBody EduSubject eduSubject) {
+        courseBPO.deleteSubject(eduSubject);
+    }
+
+    /**
+    *@author 何欢
+    *@Date 4:25 2022/12/11
+    *@Description 保存课程信息
+    **/
+    @PostMapping("/course/saveCourse")
+    public ResultVo saveCourse(@RequestBody EduCourse eduCourse) {
+        EduCourse eduCourseResult = courseBPO.saveCourse(eduCourse);
+        return ResultVo.ok(eduCourseResult);
     }
 }

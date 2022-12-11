@@ -2,9 +2,11 @@ package org.antwhale.bpo.impl;
 
 import com.antwhale.framework.utils.CommonUtils;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import org.antwhale.blo.EduCourseBLO;
 import org.antwhale.blo.EduSubjectBLO;
 import org.antwhale.bpo.CourseBPO;
 import org.antwhale.dto.course.EduSubjectResultDTO;
+import org.antwhale.entity.EduCourse;
 import org.antwhale.entity.EduSubject;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,6 +25,9 @@ import java.util.stream.Collectors;
 public class CourseBPOImpl implements CourseBPO {
     @Autowired
     private EduSubjectBLO eduSubjectBLO;
+
+    @Autowired
+    private EduCourseBLO eduCourseBLO;
 
     //类别节点容器
     private List<EduSubject> allNodeList;
@@ -72,14 +77,19 @@ public class CourseBPOImpl implements CourseBPO {
     }
 
     /**
-     *@author 何欢
-     *@Date 23:23 2022/12/6
-     *@Description 删除课程类别
+     * @author 何欢
+     * @Date 23:23 2022/12/6
+     * @Description 删除课程类别
      **/
     @Override
-    public void deleteCourseType(EduSubject eduSubject) {
+    public void deleteSubject(EduSubject eduSubject) {
         eduSubject.setValidflag("0");
         eduSubjectBLO.updateById(eduSubject);
+    }
+
+    @Override
+    public EduCourse saveCourse(EduCourse eduCourse) {
+        return null;
     }
 
     /**
@@ -168,7 +178,7 @@ public class CourseBPOImpl implements CourseBPO {
         EduSubject eduSubjectResult;
         if (CommonUtils.IsNull(eduSubject.getChildrenLabel())) {
             eduSubjectResult = eduSubjectBLO.getOne(new QueryWrapper<EduSubject>().eq("title", eduSubject.getLabel()));
-        }else{
+        } else {
             eduSubjectResult = eduSubjectBLO.getOne(new QueryWrapper<EduSubject>().eq("title", eduSubject.getChildrenLabel()));
         }
 
@@ -216,7 +226,7 @@ public class CourseBPOImpl implements CourseBPO {
                 .stream()
                 .filter(p -> "0".equals(p.getParentId())).map(EduSubject::getSort)
                 .max((s1, s2) -> s1 - s2)
-                .ifPresent(e->eduSubjectParent.setSort(e + 1));
+                .ifPresent(e -> eduSubjectParent.setSort(e + 1));
         eduSubjectParent.setLabel(eduSubject.getLabel());
 
         eduSubjectParent.setValidflag("1");
