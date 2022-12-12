@@ -8,7 +8,6 @@ import org.antwhale.bpo.CourseBPO;
 import org.antwhale.dto.course.EduSubjectResultDTO;
 import org.antwhale.entity.EduCourse;
 import org.antwhale.entity.EduSubject;
-import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -40,7 +39,7 @@ public class CourseBPOImpl implements CourseBPO {
     @Override
     public List<EduSubjectResultDTO> querySubject(EduSubject eduSubject) {
         //参数校验
-//        validParam(eduSubject);
+//        validSubjectParam(eduSubject);
 
         //构造查询条件
         QueryWrapper queryWrapper = getQueryWrapper(eduSubject);
@@ -62,7 +61,7 @@ public class CourseBPOImpl implements CourseBPO {
     @Override
     public EduSubject saveSubject(EduSubject eduSubject) {
         //校验
-        validMethod(eduSubject);
+        validSubjectMethod(eduSubject);
 
         //保存父节点类别
         saveParentNode(eduSubject);
@@ -87,10 +86,41 @@ public class CourseBPOImpl implements CourseBPO {
         eduSubjectBLO.updateById(eduSubject);
     }
 
+    /**
+     * @author 何欢
+     * @Date 20:56 2022/12/12
+     * @Description 查询课程信息
+     **/
     @Override
-    public EduCourse saveCourse(EduCourse eduCourse) {
-        return null;
+    public List<EduCourse> queryCourse(EduCourse eduCourse) {
+        //构造查询条件构造器
+        QueryWrapper queryWrapper = eduCourseBLO.getQueryWrapper(eduCourse);
+
+        //查询
+        List<EduCourse> eduCourseList = eduCourseBLO.list(queryWrapper);
+
+        return eduCourseList;
     }
+
+    /**
+     * @author 何欢
+     * @Date 4:25 2022/12/11
+     * @Description 保存课程信息
+     **/
+    @Override
+    public List<EduCourse> saveCourse(EduCourse eduCourse) {
+        //校验
+        validCourseMethod(eduCourse);
+
+        eduCourseBLO.save(eduCourse);
+
+        //查询
+        List<EduCourse> newEduCourseList = getNewEduCourse(eduCourse);
+
+        return newEduCourseList;
+    }
+
+//类目管理
 
     /**
      * @author 何欢
@@ -238,7 +268,7 @@ public class CourseBPOImpl implements CourseBPO {
      * @Date 11:43 2022/12/4
      * @Description 业务校验
      **/
-    private void validBusiness(EduSubject eduSubject) {
+    private void validSubjectBusiness(EduSubject eduSubject) {
         //如果此次添加的一级类别不存在，则直接添加
         List<EduSubject> parentNode = allNodeList
                 .stream()
@@ -278,7 +308,7 @@ public class CourseBPOImpl implements CourseBPO {
      * @Date 11:04 2022/12/4
      * @Description 参数校验
      **/
-    private void validParam(EduSubject eduSubject) {
+    private void validSubjectParam(EduSubject eduSubject) {
         if (CommonUtils.IsNull(eduSubject)) {
             throw new RuntimeException("入参不能为空");
         }
@@ -286,26 +316,99 @@ public class CourseBPOImpl implements CourseBPO {
         if ((CommonUtils.IsNull(eduSubject.getLabel()))) {
             throw new RuntimeException("父类别不能为空");
         }
-
-//        if (CommonUtils.IsNull(eduSubject.getChildrenLabel())) {
-//            throw new RuntimeException("子类别不能为空");
-//        }
     }
 
     /**
      * @author 何欢
      * @Date 11:42 2022/12/4
-     * @Description 校验方法
+     * @Description 课程类别校验方法
      **/
-    private void validMethod(EduSubject eduSubject) {
+    private void validSubjectMethod(EduSubject eduSubject) {
         //参数校验
-        validParam(eduSubject);
+        validSubjectParam(eduSubject);
 
         //前置工作准备 - 查询出当前所有的节点
         allNodeList = eduSubjectBLO.list();
 
         //业务校验
-        validBusiness(eduSubject);
+        validSubjectBusiness(eduSubject);
     }
+
+//课程信息管理
+
+    /**
+     * @author 何欢
+     * @Date 21:07 2022/12/12
+     * @Description 根据条件得到新的课程列表
+     **/
+    private List<EduCourse> getNewEduCourse(EduCourse eduCourse) {
+        EduCourse newEduCourse = new EduCourse();
+        newEduCourse.setSubjectParentId(eduCourse.getSubjectParentId());
+        newEduCourse.setSubjectId(eduCourse.getSubjectId());
+
+        List<EduCourse> eduCourseList = queryCourse(newEduCourse);
+        return eduCourseList;
+    }
+
+    /**
+     * @author 何欢
+     * @Date 21:30 2022/12/12
+     * @Description 处理课程信息管理参数
+     **/
+    private void dealCourseParam(EduCourse eduCourse) {
+        EduSubject eduSubject = new EduSubject();
+        eduSubject.setId(eduCourse.getSubjectId());
+        EduSubject subject = eduSubjectBLO.getOne(getQueryWrapper(eduSubject));
+        if (CommonUtils.IsNull(subject)) {
+            throw new RuntimeException("根据子类目Id：" + eduCourse.getSubjectId() + "未查询到父类目信息");
+        }
+        eduCourse.setSubjectParentId(subject.getId());
+    }
+
+    /**
+     * @author 何欢
+     * @Date 20:52 2022/12/12
+     * @Description 课程信息管理业务校验
+     **/
+    private void validCourseBusiness(EduCourse eduCourse) {
+
+    }
+
+    /**
+     * @author 何欢
+     * @Date 20:47 2022/12/12
+     * @Description 课程信息管理参数校验
+     **/
+    private void validCourseParam(EduCourse eduCourse) {
+        if (CommonUtils.IsNull(eduCourse.getSubjectId())) {
+            throw new RuntimeException("请选择课程的类别");
+        }
+        if (CommonUtils.IsNull(eduCourse.getTitle())) {
+            throw new RuntimeException("请输入课程的标题");
+        }
+        if (CommonUtils.IsNull(eduCourse.getTeacherId())) {
+            throw new RuntimeException("请选择课程的讲师");
+        }
+        if (CommonUtils.IsNull(eduCourse.getCover())) {
+            throw new RuntimeException("未获取到课程封面");
+        }
+    }
+
+    /**
+     * @author 何欢
+     * @Date 20:45 2022/12/12
+     * @Description 课程信息管理校验方法
+     **/
+    private void validCourseMethod(EduCourse eduCourse) {
+        //课程参数校验方法
+        validCourseParam(eduCourse);
+
+        //处理课程信息参数
+        dealCourseParam(eduCourse);
+
+        //业务校验
+        validCourseBusiness(eduCourse);
+    }
+
 
 }

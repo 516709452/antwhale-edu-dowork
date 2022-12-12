@@ -13,30 +13,37 @@ import java.util.List;
  */
 public interface CourseBPO {
     /**
-     *@author 何欢
-     *@Date 6:41 2022/12/5
-     *@Description 查询课程类别
+     * @author 何欢
+     * @Date 6:41 2022/12/5
+     * @Description 查询课程类别
      **/
     List<EduSubjectResultDTO> querySubject(EduSubject eduSubject);
 
     /**
-     *@author 何欢
-     *@Date 0:59 2022/12/4
-     *@Description 保存课程类别
+     * @author 何欢
+     * @Date 0:59 2022/12/4
+     * @Description 保存课程类别
      **/
     EduSubject saveSubject(EduSubject eduSubject);
 
     /**
-     *@author 何欢
-     *@Date 23:23 2022/12/6
-     *@Description 删除课程类别
+     * @author 何欢
+     * @Date 23:23 2022/12/6
+     * @Description 删除课程类别
      **/
     void deleteSubject(EduSubject eduSubject);
 
     /**
-     *@author 何欢
-     *@Date 4:25 2022/12/11
-     *@Description 保存课程信息
+     * @author 何欢
+     * @Date 20:56 2022/12/12
+     * @Description 查询课程信息
      **/
-    EduCourse saveCourse(EduCourse eduCourse);
+    List<EduCourse> queryCourse(EduCourse eduCourse);
+
+    /**
+     * @author 何欢
+     * @Date 4:25 2022/12/11
+     * @Description 保存课程信息
+     **/
+    List<EduCourse> saveCourse(EduCourse eduCourse);
 }

@@ -49,23 +49,34 @@ public class CourseController {
     }
 
     /**
-    *@author 何欢
-    *@Date 23:23 2022/12/6
-    *@Description 删除课程类别
-    **/
+     * @author 何欢
+     * @Date 23:23 2022/12/6
+     * @Description 删除课程类别
+     **/
     @PostMapping("/course/deleteSubject")
     public void deleteSubject(@RequestBody EduSubject eduSubject) {
         courseBPO.deleteSubject(eduSubject);
     }
 
     /**
-    *@author 何欢
-    *@Date 4:25 2022/12/11
-    *@Description 保存课程信息
-    **/
+     * @author 何欢
+     * @Date 20:56 2022/12/12
+     * @Description 查询课程信息
+     **/
+    @PostMapping("/course/queryCourse")
+    public ResultVo queryCourse(@RequestBody EduCourse eduCourse) {
+        List<EduCourse> eduCourseList = courseBPO.queryCourse(eduCourse);
+        return ResultVo.ok(eduCourseList);
+    }
+
+    /**
+     * @author 何欢
+     * @Date 4:25 2022/12/11
+     * @Description 保存课程信息
+     **/
     @PostMapping("/course/saveCourse")
     public ResultVo saveCourse(@RequestBody EduCourse eduCourse) {
-        EduCourse eduCourseResult = courseBPO.saveCourse(eduCourse);
-        return ResultVo.ok(eduCourseResult);
+        List<EduCourse> eduCourseList = courseBPO.saveCourse(eduCourse);
+        return ResultVo.ok(eduCourseList);
     }
 }
