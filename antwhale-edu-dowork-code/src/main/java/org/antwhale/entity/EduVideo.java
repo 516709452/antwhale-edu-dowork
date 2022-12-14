@@ -8,6 +8,7 @@ import lombok.EqualsAndHashCode;
 import lombok.experimental.Accessors;
 
 import java.io.Serializable;
+import java.time.LocalDateTime;
 import java.util.Date;
 
 /**
@@ -68,15 +69,15 @@ public class EduVideo implements Serializable {
 
     @TableField("validflag")
     @ApiModelProperty(value = "数据有效标识")
-    private String validflag;
+    private String validflag = "1";
 
     @TableField(value = "createtime", fill = FieldFill.INSERT)
     @ApiModelProperty(value = "数据新增时间")
-    private String createtime;
+    private LocalDateTime createtime;
 
     @TableField(value = "updatetime", fill = FieldFill.UPDATE)
     @ApiModelProperty(value = "数据修改时间")
-    private String updatetime;
+    private LocalDateTime updatetime;
 
 
 }

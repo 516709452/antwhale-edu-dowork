@@ -2,6 +2,7 @@ package org.antwhale.blo.impl;
 
 import com.antwhale.framework.utils.CommonUtils;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import com.baomidou.mybatisplus.core.conditions.update.UpdateWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import org.antwhale.blo.EduCourseBLO;
 import org.antwhale.entity.EduCourse;
@@ -52,5 +53,15 @@ public class EduCourseBLOImpl extends ServiceImpl<EduCourseMapper, EduCourse> im
         }
 
         return queryWrapper;
+    }
+
+    @Override
+    public UpdateWrapper getUpdateWrapper(EduCourse eduCourse) {
+        UpdateWrapper<EduCourse> updateWrapper = new UpdateWrapper<>();
+        if(CommonUtils.IsNull(eduCourse.getId())){
+            throw new RuntimeException("为获取到此课程Id,无法修改");
+        }
+        updateWrapper.eq("id",eduCourse.getId());
+        return updateWrapper;
     }
 }

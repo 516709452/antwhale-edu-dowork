@@ -2,12 +2,18 @@ package org.antwhale.bpo.impl;
 
 import com.antwhale.framework.utils.CommonUtils;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import com.baomidou.mybatisplus.core.conditions.update.UpdateWrapper;
+import org.antwhale.blo.EduChapterBLO;
 import org.antwhale.blo.EduCourseBLO;
 import org.antwhale.blo.EduSubjectBLO;
+import org.antwhale.blo.EduVideoBLO;
 import org.antwhale.bpo.CourseBPO;
 import org.antwhale.dto.course.EduSubjectResultDTO;
+import org.antwhale.entity.EduChapter;
 import org.antwhale.entity.EduCourse;
 import org.antwhale.entity.EduSubject;
+import org.antwhale.entity.EduVideo;
+import org.apache.commons.collections4.CollectionUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -28,8 +34,17 @@ public class CourseBPOImpl implements CourseBPO {
     @Autowired
     private EduCourseBLO eduCourseBLO;
 
+    @Autowired
+    private EduChapterBLO eduChapterBLO;
+
+    @Autowired
+    private EduVideoBLO eduVideoBLO;
+
     //类别节点容器
     private List<EduSubject> allNodeList;
+
+    //课程容器
+    private List<EduCourse> eduCourseList;
 
     /**
      * @author 何欢
@@ -97,7 +112,10 @@ public class CourseBPOImpl implements CourseBPO {
         QueryWrapper queryWrapper = eduCourseBLO.getQueryWrapper(eduCourse);
 
         //查询
-        List<EduCourse> eduCourseList = eduCourseBLO.list(queryWrapper);
+        eduCourseList = eduCourseBLO.list(queryWrapper);
+
+        //组装章节信息 - chapterSwitch为false不携带章节信息
+        getChapterFromCourse(eduCourse);
 
         return eduCourseList;
     }
@@ -118,6 +136,83 @@ public class CourseBPOImpl implements CourseBPO {
         List<EduCourse> newEduCourseList = getNewEduCourse(eduCourse);
 
         return newEduCourseList;
+    }
+
+    /**
+     * @author 何欢
+     * @Date 16:14 2022/12/13
+     * @Description 编辑课程信息
+     **/
+    @Override
+    public List<EduCourse> editCourse(EduCourse eduCourse) {
+        UpdateWrapper updateWrapper = eduCourseBLO.getUpdateWrapper(eduCourse);
+
+        eduCourseBLO.update(eduCourse, updateWrapper);
+
+        //查询
+        List<EduCourse> newEduCourseList = getNewEduCourse(eduCourse);
+        return newEduCourseList;
+    }
+
+    /**
+     * @author 何欢
+     * @Date 15:17 2022/12/14
+     * @Description 查询章节信息
+     **/
+    @Override
+    public List<EduChapter> queryChapter(EduChapter eduChapter) {
+        QueryWrapper<EduChapter> queryWrapper = eduChapterBLO.getQueryWrapper(eduChapter);
+
+        List<EduChapter> eduChapterList = eduChapterBLO.list(queryWrapper);
+
+        return eduChapterList;
+    }
+
+    @Override
+    public List<EduChapter> saveChapter(EduChapter eduChapter) {
+        //校验
+        validVideoMethod(eduChapter);
+
+        eduChapterBLO.save(eduChapter);
+
+        //查询对应课程下所有章节
+        List<EduChapter> eduChapterList = getNewEduChapter(eduChapter);
+
+        return eduChapterList;
+    }
+
+    /**
+     * @author 何欢
+     * @Date 21:20 2022/12/13
+     * @Description 查询小节信息
+     **/
+    @Override
+    public List<EduVideo> queryVideo(EduVideo eduVideo) {
+        //获取查询章节信息条件构造器
+        QueryWrapper<EduVideo> queryWrapper = eduVideoBLO.getQueryWrapper(eduVideo);
+
+        //查询
+        List<EduVideo> eduVideoList = eduVideoBLO.list(queryWrapper);
+
+        return eduVideoList;
+    }
+
+    /**
+     * @author 何欢
+     * @Date 21:23 2022/12/13
+     * @Description 保存小节信息
+     **/
+    @Override
+    public List<EduVideo> saveVideo(EduVideo eduVideo) {
+        //章节信息管理校验方法
+        validVideoMethod(eduVideo);
+
+        eduVideoBLO.save(eduVideo);
+
+        //查询
+        List<EduVideo> newEduVideoList = getEduVideoCourse(eduVideo);
+
+        return newEduVideoList;
     }
 
 //类目管理
@@ -338,6 +433,37 @@ public class CourseBPOImpl implements CourseBPO {
 
     /**
      * @author 何欢
+     * @Date 16:40 2022/12/14
+     * @Description 组装章节信息
+     **/
+    private void getChapterFromCourse(EduCourse eduCourse) {
+        if (!eduCourse.getChapterSwitch()) {
+            return;
+        }
+        if (CollectionUtils.isEmpty(eduCourseList)) {
+            return;
+        }
+        //所有课程id
+        List<String> courseIdList = eduCourseList.stream().map(EduCourse::getId).collect(Collectors.toList());
+        //上面课程id下的章节
+        List<EduChapter> eduChapterList = eduChapterBLO.list(new QueryWrapper<EduChapter>().in("course_id", courseIdList));
+        //组装出参
+        eduCourseList.stream().forEach(
+                eduCourseTemp -> {
+                    eduCourseTemp.setHasChildren(true);
+                    eduCourseTemp.setChildren(
+                            eduChapterList
+                                    .stream()
+                                    .filter(eduChapter -> eduCourseTemp.getId().equals(eduChapter.getCourseId()))
+                                    .collect(Collectors.toList())
+                    );
+                }
+
+        );
+    }
+
+    /**
+     * @author 何欢
      * @Date 21:07 2022/12/12
      * @Description 根据条件得到新的课程列表
      **/
@@ -363,15 +489,6 @@ public class CourseBPOImpl implements CourseBPO {
             throw new RuntimeException("根据子类目Id：" + eduCourse.getSubjectId() + "未查询到父类目信息");
         }
         eduCourse.setSubjectParentId(subject.getId());
-    }
-
-    /**
-     * @author 何欢
-     * @Date 20:52 2022/12/12
-     * @Description 课程信息管理业务校验
-     **/
-    private void validCourseBusiness(EduCourse eduCourse) {
-
     }
 
     /**
@@ -405,10 +522,90 @@ public class CourseBPOImpl implements CourseBPO {
 
         //处理课程信息参数
         dealCourseParam(eduCourse);
-
-        //业务校验
-        validCourseBusiness(eduCourse);
     }
 
+//章节信息管理
 
+    /**
+     * @author 何欢
+     * @Date 16:22 2022/12/14
+     * @Description 查询对应课程下所有章节
+     **/
+    private List<EduChapter> getNewEduChapter(EduChapter eduChapter) {
+        EduChapter newEduChapter = new EduChapter();
+        newEduChapter.setCourseId(eduChapter.getCourseId());
+        List<EduChapter> eduChapterList = queryChapter(newEduChapter);
+        return eduChapterList;
+    }
+
+    /**
+     * @author 何欢
+     * @Date 16:12 2022/12/14
+     * @Description 章节信息参数校验
+     **/
+    private void validVideoParam(EduChapter eduChapter) {
+        if (CommonUtils.IsNull(eduChapter.getCourseId())) {
+            throw new RuntimeException("未获取到此章节对应的课程id");
+        }
+        if (CommonUtils.IsNull(eduChapter.getTitle())) {
+            throw new RuntimeException("未获取到章节名称");
+        }
+    }
+
+    /**
+     * @author 何欢
+     * @Date 16:11 2022/12/14
+     * @Description 章节信息管理校验方法
+     **/
+    private void validVideoMethod(EduChapter eduChapter) {
+        //参数校验
+        validVideoParam(eduChapter);
+    }
+
+//小节信息管理
+
+    /**
+     * @author 何欢
+     * @Date 21:57 2022/12/13
+     * @Description 小节信息管理保存成功后返回
+     **/
+    private List<EduVideo> getEduVideoCourse(EduVideo eduVideo) {
+        EduVideo newEduVideo = new EduVideo();
+        newEduVideo.setCourseId(eduVideo.getCourseId());
+        List<EduVideo> eduVideoList = queryVideo(newEduVideo);
+        return eduVideoList;
+    }
+
+    /**
+     * @author 何欢
+     * @Date 21:51 2022/12/13
+     * @Description 小节信息管理参数校验方法
+     **/
+    void validCourseParam(EduVideo eduVideo) {
+        if (CommonUtils.IsNull(eduVideo.getId())) {
+            throw new RuntimeException("未获取到视频ID");
+        }
+
+        if (CommonUtils.IsNull(eduVideo.getCourseId())) {
+            throw new RuntimeException("未获取到课程Id");
+        }
+
+        if (CommonUtils.IsNull(eduVideo.getChapterId())) {
+            throw new RuntimeException("未获取到章节ID");
+        }
+
+        if (CommonUtils.IsNull(eduVideo.getTitle())) {
+            throw new RuntimeException("未获取到章节标题");
+        }
+    }
+
+    /**
+     * @author 何欢
+     * @Date 21:50 2022/12/13
+     * @Description 小节信息管理校验方法
+     **/
+    private void validVideoMethod(EduVideo eduVideo) {
+        //章节信息参数校验方法
+        validCourseParam(eduVideo);
+    }
 }

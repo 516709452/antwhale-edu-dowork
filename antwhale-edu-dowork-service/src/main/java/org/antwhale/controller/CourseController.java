@@ -1,17 +1,17 @@
 package org.antwhale.controller;
 
 import lombok.extern.slf4j.Slf4j;
-import org.antwhale.blo.EduCourseBLO;
 import org.antwhale.bpo.CourseBPO;
 import org.antwhale.dto.course.EduSubjectResultDTO;
+import org.antwhale.entity.EduChapter;
 import org.antwhale.entity.EduCourse;
 import org.antwhale.entity.EduSubject;
+import org.antwhale.entity.EduVideo;
 import org.antwhale.vo.ResultVo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
-import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
 
@@ -78,5 +78,60 @@ public class CourseController {
     public ResultVo saveCourse(@RequestBody EduCourse eduCourse) {
         List<EduCourse> eduCourseList = courseBPO.saveCourse(eduCourse);
         return ResultVo.ok(eduCourseList);
+    }
+
+    /**
+     * @author 何欢
+     * @Date 16:14 2022/12/13
+     * @Description 编辑课程信息
+     **/
+    @PostMapping("/course/editCourse")
+    public ResultVo editCourse(@RequestBody EduCourse eduCourse) {
+        List<EduCourse> eduCourseList = courseBPO.editCourse(eduCourse);
+        return ResultVo.ok(eduCourseList);
+    }
+
+    /**
+     * @author 何欢
+     * @Date 21:20 2022/12/13
+     * @Description 查询章节信息
+     **/
+    @PostMapping("/course/queryChapter")
+    public ResultVo queryChapter(@RequestBody EduChapter eduChapter) {
+        List<EduChapter> eduChapterList = courseBPO.queryChapter(eduChapter);
+        return ResultVo.ok(eduChapterList);
+    }
+
+    /**
+     * @author 何欢
+     * @Date 21:23 2022/12/13
+     * @Description 保存章节信息
+     **/
+    @PostMapping("/course/saveChapter")
+    public ResultVo saveChapter(@RequestBody EduChapter eduChapter) {
+        List<EduChapter> eduChapterList = courseBPO.saveChapter(eduChapter);
+        return ResultVo.ok(eduChapterList);
+    }
+
+    /**
+    *@author 何欢
+    *@Date 15:14 2022/12/14
+    *@Description 查询小节信息
+    **/
+    @PostMapping("/course/queryVideo")
+    public ResultVo queryVideo(EduVideo eduVideo) {
+        List<EduVideo> eduVideoList = courseBPO.queryVideo(eduVideo);
+        return ResultVo.ok(eduVideoList);
+    }
+
+    /**
+    *@author 何欢
+    *@Date 15:14 2022/12/14
+    *@Description 保存小节信息
+    **/
+    @PostMapping("/course/saveVideo")
+    public ResultVo saveVideo(EduVideo eduVideo) {
+        List<EduVideo> eduVideoList = courseBPO.saveVideo(eduVideo);
+        return ResultVo.ok(eduVideoList);
     }
 }

@@ -1,6 +1,7 @@
 package org.antwhale.entity;
 
 import com.baomidou.mybatisplus.annotation.*;
+import com.sun.org.apache.xpath.internal.operations.Bool;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
@@ -12,6 +13,7 @@ import java.io.Serializable;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.Date;
+import java.util.List;
 
 /**
  * <p>
@@ -80,4 +82,16 @@ public class EduCourse implements Serializable {
     @TableField(value = "updatetime", fill = FieldFill.UPDATE)
     @ApiModelProperty(value = "数据修改时间")
     private LocalDateTime updatetime;
+
+    @TableField(exist = false)
+    @ApiModelProperty(value = "查询是否携带章节,默认携带")
+    private Boolean chapterSwitch = false;
+
+    @TableField(exist = false)
+    @ApiModelProperty(value = "携带的章节")
+    private List<EduChapter> children;
+
+    @TableField(exist = false)
+    @ApiModelProperty(value = "开启携带章节开关后，是否有子节点")
+    private Boolean hasChildren = true;
 }

@@ -3,7 +3,7 @@ package org.antwhale.blo.impl;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import org.antwhale.blo.EduSubjectBLO;
 import org.antwhale.entity.EduSubject;
-import org.antwhale.mapper.EduChapterMapper;
+import org.antwhale.mapper.EduSubjectMapper;
 import org.springframework.stereotype.Service;
 
 /**
@@ -12,7 +12,7 @@ import org.springframework.stereotype.Service;
  * @Description:
  */
 @Service
-public class EduSubjectBLOImpl extends ServiceImpl<EduChapterMapper,EduSubject> implements EduSubjectBLO {
+public class EduSubjectBLOImpl extends ServiceImpl<EduSubjectMapper,EduSubject> implements EduSubjectBLO {
     /**
      *@author 何欢
      *@Date 0:59 2022/12/4

@@ -3,6 +3,8 @@ package org.antwhale.bpo;
 import org.antwhale.dto.course.EduSubjectResultDTO;
 import org.antwhale.entity.EduCourse;
 import org.antwhale.entity.EduSubject;
+import org.antwhale.entity.EduChapter;
+import org.antwhale.entity.EduVideo;
 
 import java.util.List;
 
@@ -46,4 +48,39 @@ public interface CourseBPO {
      * @Description 保存课程信息
      **/
     List<EduCourse> saveCourse(EduCourse eduCourse);
+
+    /**
+     * @author 何欢
+     * @Date 16:14 2022/12/13
+     * @Description 编辑课程信息
+     **/
+    List<EduCourse> editCourse(EduCourse eduCourse);
+
+    /**
+     * @author 何欢
+     * @Date 21:20 2022/12/13
+     * @Description 查询章节信息
+     **/
+    List<EduChapter> queryChapter(EduChapter eduChapter);
+
+    /**
+     * @author 何欢
+     * @Date 21:23 2022/12/13
+     * @Description 保存章节信息
+     **/
+    List<EduChapter> saveChapter(EduChapter eduChapter);
+
+    /**
+     * @author 何欢
+     * @Date 15:14 2022/12/14
+     * @Description 查询小节信息
+     **/
+    List<EduVideo> queryVideo(EduVideo eduVideo);
+
+    /**
+     * @author 何欢
+     * @Date 15:14 2022/12/14
+     * @Description 保存小节信息
+     **/
+    List<EduVideo> saveVideo(EduVideo eduVideo);
 }
