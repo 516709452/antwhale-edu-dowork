@@ -2,6 +2,7 @@ package org.antwhale.blo.impl;
 
 import com.antwhale.framework.utils.CommonUtils;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import com.baomidou.mybatisplus.core.conditions.update.UpdateWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import org.antwhale.blo.EduVideoBLO;
 import org.antwhale.entity.EduVideo;
@@ -23,6 +24,9 @@ public class EduVideoBLOImpl extends ServiceImpl<EduVideoMapper, EduVideo> imple
         }
         if (CommonUtils.IsNotNull(eduVideo.getCourseId())) {
             queryWrapper.eq("course_id", eduVideo.getCourseId());
+        }
+        if (CommonUtils.IsNotNull(eduVideo.getChapterIdList())) {
+            queryWrapper.in("chapter_id", eduVideo.getChapterIdList());
         }
         if (CommonUtils.IsNotNull(eduVideo.getChapterId())) {
             queryWrapper.eq("chapter_id", eduVideo.getChapterId());
@@ -46,5 +50,15 @@ public class EduVideoBLOImpl extends ServiceImpl<EduVideoMapper, EduVideo> imple
             queryWrapper.eq("validflag", eduVideo.getValidflag());
         }
         return queryWrapper;
+    }
+
+    @Override
+    public UpdateWrapper<EduVideo> getUpdateWrapper(EduVideo eduVideo) {
+        if (CommonUtils.IsNull(eduVideo.getId())) {
+            throw new RuntimeException("未获取到小节id，无法修改");
+        }
+        UpdateWrapper<EduVideo> updateWrapper = new UpdateWrapper<>();
+        updateWrapper.eq("id", eduVideo.getId());
+        return updateWrapper;
     }
 }

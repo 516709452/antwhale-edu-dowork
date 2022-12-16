@@ -10,6 +10,7 @@ import lombok.experimental.Accessors;
 import java.io.Serializable;
 import java.time.LocalDateTime;
 import java.util.Date;
+import java.util.List;
 
 /**
  * <p>
@@ -52,5 +53,20 @@ public class EduChapter implements Serializable {
     @ApiModelProperty(value = "数据修改时间")
     private LocalDateTime updatetime;
 
+    @TableField(exist = false)
+    @ApiModelProperty(value = "根据课程id批量查询")
+    private List<String> courseIdList;
+
+    @TableField(exist = false)
+    @ApiModelProperty(value = "查询是否携带小节,默认携带")
+    private Boolean videoSwitch = true;
+
+    @TableField(exist = false)
+    @ApiModelProperty(value = "携带的小节")
+    private List<EduVideo> children;
+
+//    @TableField(exist = false)
+//    @ApiModelProperty(value = "开启携带小节开关后，是否有子节点")
+//    private Boolean hasChildren = false;
 
 }

@@ -10,6 +10,7 @@ import lombok.experimental.Accessors;
 import java.io.Serializable;
 import java.time.LocalDateTime;
 import java.util.Date;
+import java.util.List;
 
 /**
  * <p>
@@ -22,7 +23,7 @@ import java.util.Date;
 @Data
 @TableName("edu_video")
 @EqualsAndHashCode(callSuper = false)
-@ApiModel(value="EduVideo对象", description="课程视频")
+@ApiModel(value = "EduVideo对象", description = "课程视频")
 public class EduVideo implements Serializable {
 
     private static final long serialVersionUID = 1L;
@@ -79,5 +80,7 @@ public class EduVideo implements Serializable {
     @ApiModelProperty(value = "数据修改时间")
     private LocalDateTime updatetime;
 
-
+    @TableField(exist = false)
+    @ApiModelProperty(value = "根据章节id批量查询")
+    private List<String> chapterIdList;
 }

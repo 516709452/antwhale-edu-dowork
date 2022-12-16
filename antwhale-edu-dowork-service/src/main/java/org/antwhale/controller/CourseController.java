@@ -50,6 +50,17 @@ public class CourseController {
 
     /**
      * @author 何欢
+     * @Date 0:15 2022/12/16
+     * @Description 修改课程类别
+     **/
+    @PostMapping("/course/editSubject")
+    public ResultVo editSubject(@RequestBody EduSubject eduSubject) {
+        EduSubject eduSubjectResult = courseBPO.editSubject(eduSubject);
+        return ResultVo.ok(eduSubjectResult);
+    }
+
+    /**
+     * @author 何欢
      * @Date 23:23 2022/12/6
      * @Description 删除课程类别
      **/
@@ -114,24 +125,46 @@ public class CourseController {
     }
 
     /**
-    *@author 何欢
-    *@Date 15:14 2022/12/14
-    *@Description 查询小节信息
-    **/
+     * @author 何欢
+     * @Date 22:29 2022/12/15
+     * @Description 修改章节信息
+     **/
+    @PostMapping("/course/editChapter")
+    public ResultVo editChapter(@RequestBody EduChapter eduChapter) {
+        List<EduChapter> eduChapterList = courseBPO.editChapter(eduChapter);
+        return ResultVo.ok(eduChapterList);
+    }
+
+    /**
+     * @author 何欢
+     * @Date 15:14 2022/12/14
+     * @Description 查询小节信息
+     **/
     @PostMapping("/course/queryVideo")
-    public ResultVo queryVideo(EduVideo eduVideo) {
+    public ResultVo queryVideo(@RequestBody EduVideo eduVideo) {
         List<EduVideo> eduVideoList = courseBPO.queryVideo(eduVideo);
         return ResultVo.ok(eduVideoList);
     }
 
     /**
-    *@author 何欢
-    *@Date 15:14 2022/12/14
-    *@Description 保存小节信息
-    **/
+     * @author 何欢
+     * @Date 15:14 2022/12/14
+     * @Description 保存小节信息
+     **/
     @PostMapping("/course/saveVideo")
-    public ResultVo saveVideo(EduVideo eduVideo) {
+    public ResultVo saveVideo(@RequestBody EduVideo eduVideo) {
         List<EduVideo> eduVideoList = courseBPO.saveVideo(eduVideo);
+        return ResultVo.ok(eduVideoList);
+    }
+
+    /**
+     * @author 何欢
+     * @Date 1:23 2022/12/17
+     * @Description 修改小节信息
+     **/
+    @PostMapping("/course/editVideo")
+    public ResultVo editVideo(@RequestBody EduVideo eduVideo) {
+        List<EduVideo> eduVideoList = courseBPO.editVideo(eduVideo);
         return ResultVo.ok(eduVideoList);
     }
 }

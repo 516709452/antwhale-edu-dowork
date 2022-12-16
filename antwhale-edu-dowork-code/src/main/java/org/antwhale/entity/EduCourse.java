@@ -85,13 +85,13 @@ public class EduCourse implements Serializable {
 
     @TableField(exist = false)
     @ApiModelProperty(value = "查询是否携带章节,默认携带")
-    private Boolean chapterSwitch = false;
+    private Boolean chapterSwitch = true;
 
     @TableField(exist = false)
     @ApiModelProperty(value = "携带的章节")
     private List<EduChapter> children;
 
-    @TableField(exist = false)
-    @ApiModelProperty(value = "开启携带章节开关后，是否有子节点")
-    private Boolean hasChildren = true;
+//    @TableField(exist = false)
+//    @ApiModelProperty(value = "开启携带章节开关后，是否有子节点")
+//    private Boolean hasChildren = false;
 }

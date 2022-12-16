@@ -29,6 +29,13 @@ public interface CourseBPO {
     EduSubject saveSubject(EduSubject eduSubject);
 
     /**
+     *@author 何欢
+     *@Date 0:15 2022/12/16
+     *@Description 修改课程类别
+     **/
+    EduSubject editSubject(EduSubject eduSubject);
+
+    /**
      * @author 何欢
      * @Date 23:23 2022/12/6
      * @Description 删除课程类别
@@ -83,4 +90,18 @@ public interface CourseBPO {
      * @Description 保存小节信息
      **/
     List<EduVideo> saveVideo(EduVideo eduVideo);
+
+    /**
+     *@author 何欢
+     *@Date 22:29 2022/12/15
+     *@Description 修改章节信息
+     **/
+    List<EduChapter> editChapter(EduChapter eduChapter);
+
+    /**
+     * @author 何欢
+     * @Date 1:23 2022/12/17
+     * @Description 修改小节信息
+     **/
+    List<EduVideo> editVideo(EduVideo eduVideo);
 }

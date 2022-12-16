@@ -1,5 +1,6 @@
 package org.antwhale.blo;
 
+import com.baomidou.mybatisplus.core.conditions.update.UpdateWrapper;
 import com.baomidou.mybatisplus.extension.service.IService;
 import org.antwhale.entity.EduSubject;
 
@@ -10,9 +11,9 @@ import org.antwhale.entity.EduSubject;
  */
 public interface EduSubjectBLO extends IService<EduSubject> {
     /**
-     *@author 何欢
-     *@Date 0:59 2022/12/4
-     *@Description 保存课程类别
-     **/
-    EduSubject saveCourseType(EduSubject eduSubject);
+    *@author 何欢
+    *@Date 0:17 2022/12/16
+    *@Description 修改课程类别条件构造器
+    **/
+    UpdateWrapper<EduSubject> getUpdateWrapper(EduSubject eduSubject);
 }

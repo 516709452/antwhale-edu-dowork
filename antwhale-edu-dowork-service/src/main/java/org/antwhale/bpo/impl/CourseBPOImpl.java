@@ -46,6 +46,9 @@ public class CourseBPOImpl implements CourseBPO {
     //课程容器
     private List<EduCourse> eduCourseList;
 
+    //章节容器
+    private List<EduChapter> eduChapterList;
+
     /**
      * @author 何欢
      * @Date 6:41 2022/12/5
@@ -87,6 +90,20 @@ public class CourseBPOImpl implements CourseBPO {
         //为了前台动态刷新，查询出参
         EduSubject eduSubjectResult = getEduSubjectResultDTO(eduSubject);
 
+        return eduSubjectResult;
+    }
+
+    /**
+     * @author 何欢
+     * @Date 0:15 2022/12/16
+     * @Description 修改课程类别
+     **/
+    @Override
+    public EduSubject editSubject(EduSubject eduSubject) {
+        UpdateWrapper<EduSubject> updateWrapper = eduSubjectBLO.getUpdateWrapper(eduSubject);
+        eduSubjectBLO.update(eduSubject, updateWrapper);
+        //为了前台动态刷新，查询出参
+        EduSubject eduSubjectResult = getEduSubjectResultDTO(eduSubject);
         return eduSubjectResult;
     }
 
@@ -163,7 +180,9 @@ public class CourseBPOImpl implements CourseBPO {
     public List<EduChapter> queryChapter(EduChapter eduChapter) {
         QueryWrapper<EduChapter> queryWrapper = eduChapterBLO.getQueryWrapper(eduChapter);
 
-        List<EduChapter> eduChapterList = eduChapterBLO.list(queryWrapper);
+        eduChapterList = eduChapterBLO.list(queryWrapper);
+
+        getChapterAndVideo(eduChapter);
 
         return eduChapterList;
     }
@@ -179,6 +198,19 @@ public class CourseBPOImpl implements CourseBPO {
         List<EduChapter> eduChapterList = getNewEduChapter(eduChapter);
 
         return eduChapterList;
+    }
+
+    /**
+     * @author 何欢
+     * @Date 22:29 2022/12/15
+     * @Description 修改章节信息
+     **/
+    @Override
+    public List<EduChapter> editChapter(EduChapter eduChapter) {
+        UpdateWrapper<EduChapter> updateWrapper = eduChapterBLO.getUpdateWrapper(eduChapter);
+        eduChapterBLO.update(eduChapter, updateWrapper);
+        List<EduChapter> newEduChapter = getNewEduChapter(eduChapter);
+        return newEduChapter;
     }
 
     /**
@@ -210,9 +242,25 @@ public class CourseBPOImpl implements CourseBPO {
         eduVideoBLO.save(eduVideo);
 
         //查询
-        List<EduVideo> newEduVideoList = getEduVideoCourse(eduVideo);
+        List<EduVideo> newEduVideoList = getEduVideoChapter(eduVideo);
 
         return newEduVideoList;
+    }
+
+    /**
+     * @author 何欢
+     * @Date 1:23 2022/12/17
+     * @Description 修改小节信息
+     **/
+    @Override
+    public List<EduVideo> editVideo(EduVideo eduVideo) {
+        UpdateWrapper<EduVideo> updateWrapper = eduVideoBLO.getUpdateWrapper(eduVideo);
+
+        eduVideoBLO.update(eduVideo, updateWrapper);
+
+        List<EduVideo> eduVideoList = getEduVideoChapter(eduVideo);
+
+        return eduVideoList;
     }
 
 //类目管理
@@ -440,22 +488,28 @@ public class CourseBPOImpl implements CourseBPO {
         if (!eduCourse.getChapterSwitch()) {
             return;
         }
-        if (CollectionUtils.isEmpty(eduCourseList)) {
+        if (CommonUtils.IsNull(eduCourseList)) {
             return;
         }
         //所有课程id
         List<String> courseIdList = eduCourseList.stream().map(EduCourse::getId).collect(Collectors.toList());
         //上面课程id下的章节
-        List<EduChapter> eduChapterList = eduChapterBLO.list(new QueryWrapper<EduChapter>().in("course_id", courseIdList));
+        EduChapter eduChapter = new EduChapter();
+        eduChapter.setCourseIdList(courseIdList);
+        List<EduChapter> eduChapterList = queryChapter(eduChapter);
         //组装出参
         eduCourseList.stream().forEach(
                 eduCourseTemp -> {
-                    eduCourseTemp.setHasChildren(true);
+                    List<EduChapter> eduChapters = eduChapterList
+                            .stream()
+                            .filter(eduChapterTemp -> eduCourseTemp.getId().equals(eduChapterTemp.getCourseId()))
+                            .collect(Collectors.toList());
+                    if (CommonUtils.IsNull(eduChapters)) {
+                        return;
+                    }
+//                    eduCourseTemp.setHasChildren(true);
                     eduCourseTemp.setChildren(
-                            eduChapterList
-                                    .stream()
-                                    .filter(eduChapter -> eduCourseTemp.getId().equals(eduChapter.getCourseId()))
-                                    .collect(Collectors.toList())
+                            eduChapters
                     );
                 }
 
@@ -528,6 +582,42 @@ public class CourseBPOImpl implements CourseBPO {
 
     /**
      * @author 何欢
+     * @Date 18:06 2022/12/16
+     * @Description 得到章节以及该章节下所有的小节
+     **/
+    private void getChapterAndVideo(EduChapter eduChapter) {
+        if (!eduChapter.getVideoSwitch()) {
+            return;
+        }
+        if (CommonUtils.IsNull(eduChapterList)) {
+            return;
+        }
+        //所有的章节id
+        List<String> chapterIdList = eduChapterList.stream().map(EduChapter::getId).collect(Collectors.toList());
+
+        //根据所有章节id批量查询小节信息
+        EduVideo eduVideo = new EduVideo();
+        eduVideo.setChapterIdList(chapterIdList);
+        List<EduVideo> eduVideoList = queryVideo(eduVideo);
+
+        eduChapterList.stream()
+                .forEach(chapter -> {
+                            List<EduVideo> eduVideos = eduVideoList
+                                    .stream()
+                                    .filter(video -> chapter.getId().equals(video.getChapterId()))
+                                    .collect(Collectors.toList());
+                            if (CommonUtils.IsNull(eduVideos)) {
+                                return;
+                            }
+//                            chapter.setHasChildren(true);
+                            chapter.setChildren(eduVideos);
+                        }
+                );
+    }
+
+
+    /**
+     * @author 何欢
      * @Date 16:22 2022/12/14
      * @Description 查询对应课程下所有章节
      **/
@@ -569,9 +659,9 @@ public class CourseBPOImpl implements CourseBPO {
      * @Date 21:57 2022/12/13
      * @Description 小节信息管理保存成功后返回
      **/
-    private List<EduVideo> getEduVideoCourse(EduVideo eduVideo) {
+    private List<EduVideo> getEduVideoChapter(EduVideo eduVideo) {
         EduVideo newEduVideo = new EduVideo();
-        newEduVideo.setCourseId(eduVideo.getCourseId());
+        newEduVideo.setChapterId(eduVideo.getChapterId());
         List<EduVideo> eduVideoList = queryVideo(newEduVideo);
         return eduVideoList;
     }
@@ -582,10 +672,6 @@ public class CourseBPOImpl implements CourseBPO {
      * @Description 小节信息管理参数校验方法
      **/
     void validCourseParam(EduVideo eduVideo) {
-        if (CommonUtils.IsNull(eduVideo.getId())) {
-            throw new RuntimeException("未获取到视频ID");
-        }
-
         if (CommonUtils.IsNull(eduVideo.getCourseId())) {
             throw new RuntimeException("未获取到课程Id");
         }
