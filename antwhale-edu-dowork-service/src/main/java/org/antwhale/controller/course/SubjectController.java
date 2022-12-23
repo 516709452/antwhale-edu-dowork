@@ -28,7 +28,7 @@ public class SubjectController {
      * @Description 查询课程类别
      **/
     @PostMapping("/course/querySubject")
-    public ResultVo querySubject(@RequestBody EduSubject eduSubject) {
+    public ResultVo querySubject(@RequestBody(required = false) EduSubject eduSubject) {
         List<EduSubjectResultDTO> eduSubjectResultDTOS = subjectBPO.querySubject(eduSubject);
         return ResultVo.ok(eduSubjectResultDTOS);
     }
