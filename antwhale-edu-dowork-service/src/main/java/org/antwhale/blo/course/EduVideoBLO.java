@@ -24,4 +24,11 @@ public interface EduVideoBLO extends IService<EduVideo> {
     *@Description 得到EduVideo的修改条件构造器
     **/
     UpdateWrapper<EduVideo> getUpdateWrapper(EduVideo eduVideo);
+
+    /**
+    *@author 何欢
+    *@Date 14:15 2022/12/24
+    *@Description 得到EduVideo的删除条件构造器
+    **/
+    UpdateWrapper<EduVideo> getDeleteWrapper(EduVideo eduVideo);
 }

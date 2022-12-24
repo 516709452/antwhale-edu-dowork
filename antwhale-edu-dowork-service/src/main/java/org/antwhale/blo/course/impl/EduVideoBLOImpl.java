@@ -61,4 +61,22 @@ public class EduVideoBLOImpl extends ServiceImpl<EduVideoMapper, EduVideo> imple
         updateWrapper.eq("id", eduVideo.getId());
         return updateWrapper;
     }
+
+    @Override
+    public UpdateWrapper<EduVideo> getDeleteWrapper(EduVideo eduVideo) {
+        UpdateWrapper<EduVideo> updateWrapper = new UpdateWrapper<>();
+        if (CommonUtils.IsNotNull(eduVideo.getId())) {
+            updateWrapper.eq("id", eduVideo.getId());
+        }
+        if (CommonUtils.IsNotNull(eduVideo.getCourseId())) {
+            updateWrapper.eq("course_id", eduVideo.getCourseId());
+        }
+        if (CommonUtils.IsNotNull(eduVideo.getChapterIdList())) {
+            updateWrapper.in("chapter_id", eduVideo.getChapterIdList());
+        }
+        if (CommonUtils.IsNotNull(eduVideo.getChapterId())) {
+            updateWrapper.eq("chapter_id", eduVideo.getChapterId());
+        }
+        return updateWrapper;
+    }
 }

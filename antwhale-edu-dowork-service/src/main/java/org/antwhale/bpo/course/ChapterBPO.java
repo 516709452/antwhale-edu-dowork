@@ -30,4 +30,11 @@ public interface ChapterBPO {
      *@Description 修改章节信息
      **/
     List<EduChapter> editChapter(EduChapter eduChapter);
+
+    /**
+     *@author 何欢
+     *@Date 13:47 2022/12/24
+     *@Description 删除章节信息
+     **/
+    List<EduChapter> deleteChapter(EduChapter eduChapter);
 }

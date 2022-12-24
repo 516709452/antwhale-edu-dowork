@@ -9,6 +9,7 @@ import org.antwhale.dto.course.EduSubjectResultDTO;
 import org.antwhale.entity.course.EduSubject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -55,20 +56,30 @@ public class SubjectBPOImpl implements SubjectBPO {
      * @Description 保存课程类别
      **/
     @Override
+    @Transactional(rollbackFor =Exception.class)
     public EduSubject saveSubject(EduSubject eduSubject) {
         //校验
         validSubjectMethod(eduSubject);
 
-        //保存父节点类别
-        saveParentNode(eduSubject);
+        //同时存在父节点与子节点不保存父节点只保存子节点
+        if (CommonUtils.IsNotNull(eduSubject.getChildrenLabel())) {
+            //得到子节点
+            EduSubject childrenNode = getChildrenNode(eduSubject);
 
-        //保存子节点类别
-        saveChildrenNode(eduSubject);
+            //保存子节点类别
+            eduSubjectBLO.save(childrenNode);
 
-        //为了前台动态刷新，查询出参
-        EduSubject eduSubjectResult = getEduSubjectResultDTO(eduSubject);
+            //为了前台动态刷新，查询出参
+            return getEduSubjectResultDTO(eduSubject);
+        }
 
-        return eduSubjectResult;
+        //得到父节点
+        EduSubject eduSubjectParent = getParentNode(eduSubject);
+
+        //保存父节点类别 - 同时存在父节点与子节点不保存父节点
+        eduSubjectBLO.save(eduSubjectParent);
+
+        return getEduSubjectResultDTO(eduSubject);
     }
 
     /**
@@ -165,10 +176,8 @@ public class SubjectBPOImpl implements SubjectBPO {
      * @Date 11:36 2022/12/4
      * @Description 保存子节点类别
      **/
-    private void saveChildrenNode(EduSubject eduSubject) {
-        if (CommonUtils.IsNull(eduSubject.getChildrenLabel())) {
-            return;
-        }
+    private EduSubject getChildrenNode(EduSubject eduSubject) {
+        EduSubject childrenNode = new EduSubject();
         //类别子节点标题
         String childrenLabel = eduSubject.getChildrenLabel();
 
@@ -178,13 +187,11 @@ public class SubjectBPOImpl implements SubjectBPO {
                 .filter(p -> "0".equals(p.getParentId())).map(EduSubject::getSort)
                 .max((s1, s2) -> s1 - s2)
                 .get();
-        EduSubject childrenNode = new EduSubject();
         childrenNode.setParentId(eduSubject.getId());
         childrenNode.setSort(sortMax + 1);
         childrenNode.setLabel(childrenLabel);
         childrenNode.setValidflag("1");
-
-        eduSubjectBLO.save(childrenNode);
+        return childrenNode;
     }
 
     /**
@@ -192,10 +199,7 @@ public class SubjectBPOImpl implements SubjectBPO {
      * @Date 11:36 2022/12/4
      * @Description 保存父节点类别
      **/
-    private void saveParentNode(EduSubject eduSubject) {
-        if (CommonUtils.IsNotNull(eduSubject.getChildrenLabel())) {
-            return;
-        }
+    private EduSubject getParentNode(EduSubject eduSubject) {
         EduSubject eduSubjectParent = new EduSubject();
         allNodeList
                 .stream()
@@ -205,7 +209,7 @@ public class SubjectBPOImpl implements SubjectBPO {
         eduSubjectParent.setLabel(eduSubject.getLabel());
 
         eduSubjectParent.setValidflag("1");
-        eduSubjectBLO.save(eduSubjectParent);
+       return eduSubjectParent;
     }
 
     /**

@@ -4,12 +4,14 @@ import com.antwhale.framework.utils.CommonUtils;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.update.UpdateWrapper;
 import org.antwhale.blo.course.EduChapterBLO;
+import org.antwhale.blo.course.EduVideoBLO;
 import org.antwhale.bpo.course.ChapterBPO;
 import org.antwhale.bpo.course.VideoBPO;
 import org.antwhale.entity.course.EduChapter;
 import org.antwhale.entity.course.EduVideo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -25,10 +27,14 @@ public class ChapterBPOImpl implements ChapterBPO {
     private EduChapterBLO eduChapterBLO;
 
     @Autowired
+    private EduVideoBLO eduVideoBLO;
+
+    @Autowired
     private VideoBPO videoBPO;
 
     //章节容器
     private List<EduChapter> eduChapterList;
+
     /**
      * @author 何欢
      * @Date 15:17 2022/12/14
@@ -69,6 +75,38 @@ public class ChapterBPOImpl implements ChapterBPO {
         eduChapterBLO.update(eduChapter, updateWrapper);
         List<EduChapter> newEduChapter = getNewEduChapter(eduChapter);
         return newEduChapter;
+    }
+
+    @Override
+    @Transactional(rollbackFor = Exception.class)
+    public List<EduChapter> deleteChapter(EduChapter eduChapter) {
+        UpdateWrapper<EduVideo> deleteWrapper = getDeleteWrapper(eduChapter);
+
+        //删除章节下的小节
+        eduVideoBLO.remove(deleteWrapper);
+
+        //删除章节
+        eduChapterBLO.removeById(eduChapter);
+
+        //删除章节
+        List<EduChapter> newEduChapter = getNewEduChapter(eduChapter);
+
+        return newEduChapter;
+    }
+
+    /**
+     * @author 何欢
+     * @Date 14:22 2022/12/24
+     * @Description 得到EduVideo的删除条件构造器
+     **/
+    private UpdateWrapper<EduVideo> getDeleteWrapper(EduChapter eduChapter) {
+        EduVideo eduVideo = new EduVideo();
+
+        eduVideo.setChapterId(eduChapter.getId());
+
+        UpdateWrapper<EduVideo> updateWrapper = eduVideoBLO.getDeleteWrapper(eduVideo);
+
+        return updateWrapper;
     }
 
     /**

@@ -32,4 +32,11 @@ public interface VideoBPO {
      * @Description 修改小节信息
      **/
     List<EduVideo> editVideo(EduVideo eduVideo);
+
+    /**
+     *@author 何欢
+     *@Date 13:33 2022/12/24
+     *@Description 删除小节
+     **/
+    List<EduVideo> deleteVideo(EduVideo eduVideo);
 }

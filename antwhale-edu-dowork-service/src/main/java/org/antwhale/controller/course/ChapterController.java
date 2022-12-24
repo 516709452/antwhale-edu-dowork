@@ -54,4 +54,15 @@ public class ChapterController {
         return ResultVo.ok(eduChapterList);
     }
 
+    /**
+    *@author 何欢
+    *@Date 13:47 2022/12/24
+    *@Description 删除章节信息
+    **/
+    @PostMapping("/course/deleteChapter")
+    public ResultVo deleteChapter(@RequestBody EduChapter eduChapter) {
+        List<EduChapter> eduChapterList = chapterBPO.deleteChapter(eduChapter);
+        return ResultVo.ok(eduChapterList);
+    }
+
 }

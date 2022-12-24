@@ -73,6 +73,20 @@ public class VideoBPOImpl implements VideoBPO {
     }
 
     /**
+     *@author 何欢
+     *@Date 13:33 2022/12/24
+     *@Description 删除小节
+     **/
+    @Override
+    public List<EduVideo> deleteVideo(EduVideo eduVideo) {
+        eduVideoBLO.removeById(eduVideo);
+
+        List<EduVideo> eduVideoList = getEduVideoChapter(eduVideo);
+
+        return eduVideoList;
+    }
+
+    /**
      * @author 何欢
      * @Date 21:57 2022/12/13
      * @Description 小节信息管理保存成功后返回

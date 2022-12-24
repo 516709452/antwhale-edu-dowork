@@ -54,4 +54,15 @@ public class VideoController {
         List<EduVideo> eduVideoList = videoBPO.editVideo(eduVideo);
         return ResultVo.ok(eduVideoList);
     }
+
+    /**
+    *@author 何欢
+    *@Date 13:33 2022/12/24
+    *@Description 删除小节
+    **/
+    @PostMapping("/course/deleteVideo")
+    public ResultVo deleteVideo(@RequestBody EduVideo eduVideo) {
+        List<EduVideo> eduVideoList = videoBPO.deleteVideo(eduVideo);
+        return ResultVo.ok(eduVideoList);
+    }
 }
