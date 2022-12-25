@@ -53,5 +53,4 @@ public class CourseController {
         List<EduCourse> eduCourseList = courseBPO.editCourse(eduCourse);
         return ResultVo.ok(eduCourseList);
     }
-
 }

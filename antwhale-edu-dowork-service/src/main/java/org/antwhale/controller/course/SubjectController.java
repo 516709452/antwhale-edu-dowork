@@ -2,7 +2,7 @@ package org.antwhale.controller.course;
 
 import lombok.extern.slf4j.Slf4j;
 import org.antwhale.bpo.course.SubjectBPO;
-import org.antwhale.dto.course.EduSubjectResultDTO;
+import org.antwhale.dto.course.subject.EduSubjectResultDTO;
 import org.antwhale.entity.course.EduSubject;
 import org.antwhale.vo.ResultVo;
 import org.springframework.beans.factory.annotation.Autowired;

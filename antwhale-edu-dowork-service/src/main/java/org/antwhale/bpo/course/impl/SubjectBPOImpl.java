@@ -5,7 +5,7 @@ import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.update.UpdateWrapper;
 import org.antwhale.blo.course.EduSubjectBLO;
 import org.antwhale.bpo.course.SubjectBPO;
-import org.antwhale.dto.course.EduSubjectResultDTO;
+import org.antwhale.dto.course.subject.EduSubjectResultDTO;
 import org.antwhale.entity.course.EduSubject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;

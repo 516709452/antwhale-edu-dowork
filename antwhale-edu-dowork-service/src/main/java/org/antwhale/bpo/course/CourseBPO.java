@@ -30,5 +30,4 @@ public interface CourseBPO {
      * @Description 编辑课程信息
      **/
     List<EduCourse> editCourse(EduCourse eduCourse);
-
 }

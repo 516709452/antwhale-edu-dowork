@@ -1,6 +1,6 @@
 package org.antwhale.bpo.course;
 
-import org.antwhale.dto.course.EduSubjectResultDTO;
+import org.antwhale.dto.course.subject.EduSubjectResultDTO;
 import org.antwhale.entity.course.EduSubject;
 
 import java.util.List;

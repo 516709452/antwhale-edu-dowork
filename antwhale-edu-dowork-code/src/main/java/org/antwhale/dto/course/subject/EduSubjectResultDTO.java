@@ -1,4 +1,4 @@
-package org.antwhale.dto.course;
+package org.antwhale.dto.course.subject;
 
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
