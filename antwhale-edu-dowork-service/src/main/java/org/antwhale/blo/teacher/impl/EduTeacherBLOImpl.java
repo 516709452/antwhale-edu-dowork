@@ -24,22 +24,22 @@ public class EduTeacherBLOImpl extends ServiceImpl<EduTeacherMapper, EduTeacher>
         if (CommonUtils.IsNotNull(teacher.getId()) && !"0".equals(teacher.getId())) {
             queryWrapper.eq("id", teacher.getId());
         }
-        if (CommonUtils.IsNotNull(teacher.getId())) {
+        if (CommonUtils.IsNotNull(teacher.getName())) {
             queryWrapper.eq("name", teacher.getName());
         }
-        if (CommonUtils.IsNotNull(teacher.getId())) {
+        if (CommonUtils.IsNotNull(teacher.getIntro())) {
             queryWrapper.eq("intro", teacher.getIntro());
         }
-        if (CommonUtils.IsNotNull(teacher.getId())) {
+        if (CommonUtils.IsNotNull(teacher.getCareer())) {
             queryWrapper.eq("career", teacher.getCareer());
         }
-        if (CommonUtils.IsNotNull(teacher.getId())) {
+        if (CommonUtils.IsNotNull(teacher.getLevel())) {
             queryWrapper.eq("level", teacher.getLevel());
         }
-        if (CommonUtils.IsNotNull(teacher.getId())) {
+        if (CommonUtils.IsNotNull(teacher.getAvatar())) {
             queryWrapper.eq("avatar", teacher.getAvatar());
         }
-        if (CommonUtils.IsNotNull(teacher.getId())) {
+        if (CommonUtils.IsNotNull(teacher.getValidflag())) {
             queryWrapper.eq("validflag", teacher.getValidflag());
         }
         return queryWrapper;
