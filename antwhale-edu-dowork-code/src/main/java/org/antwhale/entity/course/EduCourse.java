@@ -88,6 +88,10 @@ public class EduCourse implements Serializable {
     @ApiModelProperty(value = "携带的章节")
     private List<EduChapter> children;
 
+    @TableField(exist = false)
+    @ApiModelProperty(value = "根据课程id批量查询")
+    private List<String> courseIdList;
+
 //    @TableField(exist = false)
 //    @ApiModelProperty(value = "开启携带章节开关后，是否有子节点")
 //    private Boolean hasChildren = false;

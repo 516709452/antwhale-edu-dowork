@@ -24,6 +24,10 @@ public class EduCourseBLOImpl extends ServiceImpl<EduCourseMapper, EduCourse> im
             queryWrapper.eq("id", eduCourse.getId());
         }
 
+        if(CommonUtils.IsNotNull(eduCourse.getCourseIdList())){
+            queryWrapper.in("id",eduCourse.getCourseIdList());
+        }
+
         if (CommonUtils.IsNotNull(eduCourse.getTeacherId())) {
             queryWrapper.eq("teacher_id", eduCourse.getTeacherId());
         }

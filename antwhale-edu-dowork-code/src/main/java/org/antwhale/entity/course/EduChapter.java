@@ -15,7 +15,7 @@ import java.util.List;
  * 课程
  * </p>
  *
- * @author testjava
+ * @author hh
  * @since 2020-03-02
  */
 @Data
