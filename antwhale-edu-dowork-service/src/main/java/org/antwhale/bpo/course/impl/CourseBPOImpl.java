@@ -3,6 +3,7 @@ package org.antwhale.bpo.course.impl;
 import com.antwhale.framework.utils.CommonUtils;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.update.UpdateWrapper;
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import org.antwhale.blo.course.EduCourseBLO;
 import org.antwhale.blo.course.EduSubjectBLO;
 import org.antwhale.bpo.course.ChapterBPO;
@@ -42,17 +43,19 @@ public class CourseBPOImpl implements CourseBPO {
      * @Description 查询课程信息
      **/
     @Override
-    public List<EduCourse> queryCourse(EduCourse eduCourse) {
+    public Page<EduCourse> queryCourse(EduCourse eduCourse) {
         //构造查询条件构造器
         QueryWrapper queryWrapper = eduCourseBLO.getQueryWrapper(eduCourse);
 
         //查询
-        eduCourseList = eduCourseBLO.list(queryWrapper);
+        Page<EduCourse> eduCoursePage = eduCourseBLO.page(new Page<EduCourse>(eduCourse.getCurrentPage(),eduCourse.getPageSize()),queryWrapper);
+
+        eduCourseList = eduCoursePage.getRecords();
 
         //组装章节信息 - chapterSwitch为false不携带章节信息
         getChapterFromCourse(eduCourse);
 
-        return eduCourseList;
+        return eduCoursePage;
     }
 
     /**
@@ -61,14 +64,14 @@ public class CourseBPOImpl implements CourseBPO {
      * @Description 保存课程信息
      **/
     @Override
-    public List<EduCourse> saveCourse(EduCourse eduCourse) {
+    public Page<EduCourse> saveCourse(EduCourse eduCourse) {
         //校验
         validCourseMethod(eduCourse);
 
         eduCourseBLO.save(eduCourse);
 
         //查询
-        List<EduCourse> newEduCourseList = getNewEduCourse(eduCourse);
+        Page<EduCourse> newEduCourseList = getNewEduCourse(eduCourse);
 
         return newEduCourseList;
     }
@@ -79,13 +82,13 @@ public class CourseBPOImpl implements CourseBPO {
      * @Description 编辑课程信息
      **/
     @Override
-    public List<EduCourse> editCourse(EduCourse eduCourse) {
+    public Page<EduCourse> editCourse(EduCourse eduCourse) {
         UpdateWrapper updateWrapper = eduCourseBLO.getUpdateWrapper(eduCourse);
 
         eduCourseBLO.update(eduCourse, updateWrapper);
 
         //查询
-        List<EduCourse> newEduCourseList = getNewEduCourse(eduCourse);
+        Page<EduCourse> newEduCourseList = getNewEduCourse(eduCourse);
 
         return newEduCourseList;
     }
@@ -119,9 +122,7 @@ public class CourseBPOImpl implements CourseBPO {
                         return;
                     }
 //                    eduCourseTemp.setHasChildren(true);
-                    eduCourseTemp.setChildren(
-                            eduChapters
-                    );
+                    eduCourseTemp.setChildren(eduChapters);
                 }
 
         );
@@ -132,12 +133,14 @@ public class CourseBPOImpl implements CourseBPO {
      * @Date 21:07 2022/12/12
      * @Description 根据条件得到新的课程列表
      **/
-    private List<EduCourse> getNewEduCourse(EduCourse eduCourse) {
+    private Page<EduCourse> getNewEduCourse(EduCourse eduCourse) {
         EduCourse newEduCourse = new EduCourse();
         newEduCourse.setSubjectParentId(eduCourse.getSubjectParentId());
         newEduCourse.setSubjectId(eduCourse.getSubjectId());
+        newEduCourse.setCurrentPage(eduCourse.getCurrentPage());
+        newEduCourse.setPageSize(eduCourse.getPageSize());
 
-        List<EduCourse> eduCourseList = queryCourse(newEduCourse);
+        Page<EduCourse> eduCourseList = queryCourse(newEduCourse);
         return eduCourseList;
     }
 

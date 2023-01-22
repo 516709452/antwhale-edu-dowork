@@ -1,5 +1,6 @@
 package org.antwhale.bpo.course;
 
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import org.antwhale.entity.course.EduCourse;
 
 import java.util.List;
@@ -15,19 +16,19 @@ public interface CourseBPO {
      * @Date 20:56 2022/12/12
      * @Description 查询课程信息
      **/
-    List<EduCourse> queryCourse(EduCourse eduCourse);
+    Page<EduCourse> queryCourse(EduCourse eduCourse);
 
     /**
      * @author 何欢
      * @Date 4:25 2022/12/11
      * @Description 保存课程信息
      **/
-    List<EduCourse> saveCourse(EduCourse eduCourse);
+    Page<EduCourse> saveCourse(EduCourse eduCourse);
 
     /**
      * @author 何欢
      * @Date 16:14 2022/12/13
      * @Description 编辑课程信息
      **/
-    List<EduCourse> editCourse(EduCourse eduCourse);
+    Page<EduCourse> editCourse(EduCourse eduCourse);
 }

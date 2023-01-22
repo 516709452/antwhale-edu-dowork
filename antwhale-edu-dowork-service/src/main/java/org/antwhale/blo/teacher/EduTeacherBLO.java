@@ -16,4 +16,5 @@ public interface EduTeacherBLO extends IService<EduTeacher> {
     *@Description EduTeacher条件构造器
     **/
     QueryWrapper getQueryWrapper(EduTeacher teacher);
+
 }

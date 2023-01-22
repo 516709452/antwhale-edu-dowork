@@ -1,5 +1,6 @@
 package org.antwhale.controller.teacher;
 
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import lombok.extern.slf4j.Slf4j;
 import org.antwhale.bpo.teacher.TeacherBPO;
 import org.antwhale.entity.teacher.EduTeacher;
@@ -29,7 +30,37 @@ public class TeacherController {
     **/
     @PostMapping("/teacher/queryTeacher")
     public ResultVo queryTeacher(@RequestBody(required = false) EduTeacher teacher) {
-        List<EduTeacher> eduTeachers = teacherBPO.queryTeacher(teacher);
+        Page<EduTeacher> eduTeachers = teacherBPO.queryTeacher(teacher);
         return ResultVo.ok(eduTeachers);
+    }
+
+    /**
+     *@author 何欢
+     *@Date 23:25 2022/12/9
+     *@Description 新增讲师信息
+     **/
+    @PostMapping("/teacher/saveTeacher")
+    public void saveTeacher(@RequestBody EduTeacher teacher) {
+        teacherBPO.saveTeacher(teacher);
+    }
+
+    /**
+     *@author 何欢
+     *@Date 23:25 2022/12/9
+     *@Description 修改讲师信息
+     **/
+    @PostMapping("/teacher/editTeacher")
+    public void editTeacher(@RequestBody EduTeacher teacher) {
+        teacherBPO.editTeacher(teacher);
+    }
+
+    /**
+     *@author 何欢
+     *@Date 23:25 2022/12/9
+     *@Description 修改讲师信息
+     **/
+    @PostMapping("/teacher/deleteTeacher")
+    public void deleteTeacher(@RequestBody EduTeacher teacher) {
+        teacherBPO.deleteTeacher(teacher);
     }
 }

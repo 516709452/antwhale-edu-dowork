@@ -8,6 +8,7 @@ import lombok.EqualsAndHashCode;
 import lombok.experimental.Accessors;
 
 import java.io.Serializable;
+import java.time.LocalDateTime;
 import java.util.Date;
 
 /**
@@ -33,6 +34,9 @@ public class EduTeacher implements Serializable {
     @ApiModelProperty(value = "讲师姓名")
     private String name;
 
+    @ApiModelProperty(value = "讲师性别")
+    private String sex;
+
     @ApiModelProperty(value = "讲师简介")
     private String intro;
 
@@ -54,11 +58,17 @@ public class EduTeacher implements Serializable {
 
     @TableField(value = "createtime", fill = FieldFill.INSERT)
     @ApiModelProperty(value = "数据新增时间")
-    private String createtime;
+    private LocalDateTime createtime;
 
     @TableField(value = "updatetime", fill = FieldFill.UPDATE)
     @ApiModelProperty(value = "数据修改时间")
-    private String updatetime;
+    private LocalDateTime updatetime;
 
+    @TableField(exist = false)
+    @ApiModelProperty(value = "当前页码")
+    private Long currentPage;
 
+    @TableField(exist = false)
+    @ApiModelProperty(value = "分页大小")
+    private Long pageSize;
 }

@@ -1,8 +1,7 @@
 package org.antwhale.bpo.teacher;
 
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import org.antwhale.entity.teacher.EduTeacher;
-
-import java.util.List;
 
 /**
  * @Author: 何欢
@@ -15,5 +14,26 @@ public interface TeacherBPO {
      *@Date 23:25 2022/12/9
      *@Description 查询讲师信息
      **/
-    List<EduTeacher> queryTeacher(EduTeacher teacher);
+    Page<EduTeacher> queryTeacher(EduTeacher teacher);
+
+    /**
+     *@author 何欢
+     *@Date 23:25 2022/12/9
+     *@Description 新增讲师信息
+     **/
+    void saveTeacher(EduTeacher teacher);
+
+    /**
+     *@author 何欢
+     *@Date 23:25 2022/12/9
+     *@Description 修改讲师信息
+     **/
+    void editTeacher(EduTeacher teacher);
+
+    /**
+     *@author 何欢
+     *@Date 23:25 2022/12/9
+     *@Description 删除讲师信息
+     **/
+    void deleteTeacher(EduTeacher teacher);
 }

@@ -1,5 +1,6 @@
 package org.antwhale.controller.course;
 
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import lombok.extern.slf4j.Slf4j;
 import org.antwhale.bpo.course.CourseBPO;
 import org.antwhale.entity.course.EduCourse;
@@ -28,7 +29,7 @@ public class CourseController {
      **/
     @PostMapping("/course/queryCourse")
     public ResultVo queryCourse(@RequestBody EduCourse eduCourse) {
-        List<EduCourse> eduCourseList = courseBPO.queryCourse(eduCourse);
+        Page<EduCourse> eduCourseList = courseBPO.queryCourse(eduCourse);
         return ResultVo.ok(eduCourseList);
     }
 
@@ -39,7 +40,7 @@ public class CourseController {
      **/
     @PostMapping("/course/saveCourse")
     public ResultVo saveCourse(@RequestBody EduCourse eduCourse) {
-        List<EduCourse> eduCourseList = courseBPO.saveCourse(eduCourse);
+        Page<EduCourse> eduCourseList = courseBPO.saveCourse(eduCourse);
         return ResultVo.ok(eduCourseList);
     }
 
@@ -50,7 +51,7 @@ public class CourseController {
      **/
     @PostMapping("/course/editCourse")
     public ResultVo editCourse(@RequestBody EduCourse eduCourse) {
-        List<EduCourse> eduCourseList = courseBPO.editCourse(eduCourse);
+        Page<EduCourse> eduCourseList = courseBPO.editCourse(eduCourse);
         return ResultVo.ok(eduCourseList);
     }
 }
